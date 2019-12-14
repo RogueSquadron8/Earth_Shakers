@@ -6,7 +6,7 @@ local function init(self)
 	ES_modApiExt = require(extDir .."modApiExt")
 	ES_modApiExt:init(extDir)
 	
-	modApi:appendAsset("img/combat/Growth_Icon.png",self.resourcePath.."img/combat/Growth_Icon.png")
+	modApi:appendAsset("img/icons/Earth_Shakers_icon.png",self.resourcePath.."img/icons/Earth_Shakers_icon.png")
 	modApi:appendAsset("img/weapons/EnergizeForests.png",self.resourcePath.."img/weapons/EnergizeForests.png")
 	modApi:appendAsset("img/weapons/Fertilization.png",self.resourcePath.."img/weapons/Fertilization.png")
 	modApi:appendAsset("img/weapons/ForcePalm.png",self.resourcePath.."img/weapons/ForcePalm.png")
@@ -29,7 +29,7 @@ end
 local function load(self, options, version)
 	ES_modApiExt:load(self, options, version)
 	
-	modApi:addSquadTrue({"Guerrillas", "ForcePalmMech", "FactoryMech", "BotanyMech"}, "Guerrillas", description, self.resourcePath .. "img/squad_icon.png")
+	modApi:addSquadTrue({"Earth Shakers", "ForcePalmMech", "FactoryMech", "BotanyMech"}, "Earth Shakers", description)
 	
 	local factory_hooks = require(self.scriptPath.."mobile_factory")
 	modApi:addMissionStartHook(factory_hooks.EnterMissionResetState)
@@ -47,7 +47,7 @@ return {
 	name = "Earth Shakers",
 	version = "1.0",
 	requirements = {},
-	--icon = "",
+	icon = "img/icons/Earth_Shakers_icon.png",
 	init = init,
 	load = load,
 }
