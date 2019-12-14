@@ -15,10 +15,7 @@ local function init(self)
 	require(self.scriptPath.."factoryPawns")
 	require(self.scriptPath.."pawns")
 	
-	matter_recycler = require(self.scriptPath.."matter_recycler")
-	waste_eject = require(self.scriptPath.."waste_eject")
 	force_palm = require(self.scriptPath.."force_palm")
-	botanic_assault = require(self.scriptPath.."botanic_assault")
 	
 	mobile_factory = require(self.scriptPath.."mobile_factory")
 	energize_forests = require(self.scriptPath.."energize_forests")
