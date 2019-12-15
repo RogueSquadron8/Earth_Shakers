@@ -1,1 +1,1 @@
-A mod for Into the Breach. Read more at <link>.
+A mod for Into the Breach. Read more at http://subsetgames.com/forum/viewtopic.php?f=25&t=35354&sid=057d1ed834f4fd6d1e6d42460b9b46b4.
