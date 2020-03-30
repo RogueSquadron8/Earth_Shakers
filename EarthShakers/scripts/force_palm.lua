@@ -25,12 +25,13 @@ function ForcePalm:GetTargetArea(p1)
 	local ret = PointList()
 	
 		for dir = DIR_START, DIR_END do
+			local isPush = Board:IsPawnSpace(p1 + DIR_VECTORS[dir])
 			for i = 1, self.PathSize do
 				local curr = Point(p1 + DIR_VECTORS[dir] * i)
-				if not Board:IsValid(curr) or Board:GetTerrain(curr) == TERRAIN_MOUNTAIN then
+				local isBlocked = (i > 1) and isPush and Board:IsBlocked(curr,PATH_FLYER)
+				if not Board:IsValid(curr) or Board:GetTerrain(curr) == TERRAIN_MOUNTAIN or isBlocked then
 					break
 				end
-				
 				ret:push_back(curr)
 			end
 		end

@@ -4,8 +4,6 @@ MobileFactory = Skill:new{
 	Icon = "weapons/MobileFactory.png",
 	Description = "Destroy a Mountain or rock and convert it into a flame-resistant tank. Between uses, excess ACID waste must be ejected.",
 	PathSize = 1,
-	NeedEjectStateAtStartOfTurn = false,
-	NeedEject = false,
 	PowerCost = 0,
 	PawnProduced = "Factory_Tank",
 	Upgrades = 2,
@@ -19,25 +17,30 @@ function MobileFactory:GetSkillEffect(p1,p2)
 	local spaceDam
 	local dir = GetDirection(p2 - p1)
 	local UserID = Board:GetPawn(p1):GetId()
-	
-	if not self.NeedEject then
-		if Board:GetTerrain(p2) == TERRAIN_MOUNTAIN or (Board:IsPawnSpace(p2) and (Board:GetPawn(p2):GetType() == "RockThrown" or Board:GetPawn(p2):GetType() == "Wall")) then
-			spaceDam = SpaceDamage(p2, DAMAGE_DEATH)
-			spaceDam.sPawn = self.PawnProduced
-			ret:AddDamage(spaceDam)
-		end
-		ret:AddScript("MobileFactory.NeedEject = true")
-	else
-		for i = 2, 1, -1 do 
-			local spaceDam = SpaceDamage(p1 + DIR_VECTORS[dir]*i, 0)
-			spaceDam.iAcid = 1
-			spaceDam.iPush = dir
-			ret:AddDamage(spaceDam)
-			if i == 2 then ret:AddDelay(0.1) end
-		end
-		ret:AddScript("MobileFactory.NeedEject = false")
-	end
-	
+    
+    -- Got this idea from HydroLeviathans
+    if GAME then
+        GAME.NeedEject = GAME.NeedEject or false
+    else return end
+
+    if not GAME.NeedEject then
+        if Board:GetTerrain(p2) == TERRAIN_MOUNTAIN or (Board:IsPawnSpace(p2) and (Board:GetPawn(p2):GetType() == "RockThrown" or Board:GetPawn(p2):GetType() == "Wall")) then
+            spaceDam = SpaceDamage(p2, DAMAGE_DEATH)
+            spaceDam.sPawn = self.PawnProduced
+            ret:AddDamage(spaceDam)
+        end
+        ret:AddScript("GAME.NeedEject = true")
+    else
+        for i = 2, 1, -1 do 
+            local spaceDam = SpaceDamage(p1 + DIR_VECTORS[dir]*i, 0)
+            spaceDam.iAcid = 1
+            spaceDam.iPush = dir
+            ret:AddDamage(spaceDam)
+            if i == 2 then ret:AddDelay(0.1) end
+        end
+        ret:AddScript("GAME.NeedEject = false")
+    end
+    
 	return ret
 end
 
@@ -95,23 +98,23 @@ MobileFactory_Tip_A = MobileFactory_Tip:new{
 
 -- Ensures that the weapon is ready to fabricate a tank at the start of each mission
 local EnterMissionResetState = function(mission)
-	MobileFactory.NeedEject = false
+	GAME.NeedEject = false
 	--LOG("hook fired")
 end
 local BetweenMissionPhasesResetState = function(p, n)
-	MobileFactory.NeedEject = false
+	GAME.NeedEject = false
 	--LOG("hook fired")
 end
 
 --These functions ensure that the state of the weapon is renewed when reset turn is called
 local SetStartOfTurnState = function(mission)
 	if Game:GetTeamTurn() == TEAM_PLAYER then
-		MobileFactory.NeedEjectStateAtStartOfTurn = MobileFactory.NeedEject
+		GAME.NeedEjectStateAtStartOfTurn = GAME.NeedEject
 	end
 	--LOG("hook fired")
 end
 local RefreshState = function(mission)
-	MobileFactory.NeedEject = MobileFactory.NeedEjectStateAtStartOfTurn
+	GAME.NeedEject = GAME.NeedEjectStateAtStartOfTurn
 	--LOG("hook fired")
 end
 
